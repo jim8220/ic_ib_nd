@@ -303,8 +303,6 @@ for batch, (X, y, name) in enumerate(test_dataloader):
 
     pred = best_model(X).cpu().detach()
 
-    mspscore = 1 - max(pred[0])
-
     pred_label = (pred[0][0] < 0.5)
 
     test_pred_labels.append(pred_label.item())
