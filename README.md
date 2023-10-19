@@ -77,17 +77,17 @@ machine condition that will be excluded during train and validation
 
 
 ## on-site
-Modify machine_type, bg, rseed, model_type of baseline.yaml and run noise_detection.py
+Modify machine_type, bg, rseed, input_feature of baseline.yaml and run noise_detection.py
 
 results can be found in ./dataset_prepared/.../result/
 
 ## other site
-Modify machine_type, bg_from, bg_to, rseed, model_type of infer2others.yaml and run noise_detection_infer2others.py
+Modify machine_type, bg_from, bg_to, rseed, input_feature of infer2others.yaml and run noise_detection_infer2others.py
 
 results can be found in ./infer2others/.../result/
 
 ### draw
-Modify machine_type, bg, rseed, model_type of baseline.yaml and run draw.py
+Modify machine_type, bg, rseed, input_feature of baseline.yaml and run draw.py
 
 If you have any questions, please email to lasscap@kaist.ac.kr
 
