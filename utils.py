@@ -132,9 +132,9 @@ def drawSTFT_4ch(signal1name, signal2name, machine_type, bg, title, savefig=True
     plt.gca().invert_yaxis()
     plt.tight_layout()
 
-    os.makedirs(f'./STFT_4ch/{machine_type}/N{bg}/', exist_ok=True)
+    os.makedirs(f'./intensity_and_phase_spectrum/{machine_type}/N{bg}/', exist_ok=True)
 
-    plt.savefig(f'./STFT_4ch/{machine_type}/N{bg}/' + title + fileformat) #rseed 0 only plz
+    plt.savefig(f'./intensity_and_phase_spectrum/{machine_type}/N{bg}/' + title + fileformat) #rseed 0 only plz
     plt.close()
     #print('draw complete!')
     return 0
@@ -194,9 +194,9 @@ def drawsinIPDIIDSTFT_longwin(signal1name, signal2name, machine_type, bg, title,
 
     plt.tight_layout()
 
-    os.makedirs(f'./sinIPDIID_longwin/{machine_type}/N{bg}/', exist_ok=True)
+    os.makedirs(f'./IID+sinIPD/{machine_type}/N{bg}/', exist_ok=True)
 
-    plt.savefig(f'./sinIPDIID_longwin/{machine_type}/N{bg}/' + title + fileformat) #rseed 0 only plz
+    plt.savefig(f'./IID+sinIPD/{machine_type}/N{bg}/' + title + fileformat) #rseed 0 only plz
     plt.close()
     #print('draw complete!')
     return 0
