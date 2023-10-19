@@ -18,16 +18,26 @@ Each variable in yaml file has below meaning and options.
 <baseline.yaml>
 
 machine_type: toy car / toy train
+
+
 machine type that you want to experiment with
 
 bg: 1 / 2 / 3 / 4
+
+
 background noise that you want to experiment with
 
 rseed: (recommended) 0 / 10 / 20
+
+
 random seed that you want to experiment with
 
 model_type: intensity_and_phase_spectrum / IID / IPD / sinIPD / IID+sinIPD
+
+
 input feature that you want to experiment with
+
+
 the reason why name is model_type is each model is defined separately for each input feature
 
 ==========================================================================
@@ -35,9 +45,13 @@ the reason why name is model_type is each model is defined separately for each i
 <infer2others.yaml>
 
 bg_from : 1 / 2 / 3 / 4
+
+
 background noise that is used for train and validation
 
 bg_to : 1 / 2 / 3 / 4 (different from bg_from)
+
+
 background noise that will be tested in
 
 ==========================================================================
@@ -45,8 +59,14 @@ background noise that will be tested in
 other parameters
 
 batch_size : (16) batch size
+
+
 short_cut : (True) you can pass data loading process if you make this True and data is already made as 'dataset_prepared'
+
+
 epochs : (20) epochs
+
+
 exclude : ([aL, aM, aH, bL, bM, bH, cL, cM, cH, dL, dM, dH]) machine condition that will be excluded during train and validation
 
 
