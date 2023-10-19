@@ -14,12 +14,6 @@ Here, consider that we only used model A for both toy car and toy train.
 After running, ./processed_data will be made
 
 
-For those who can not download all dataset from ToyADMOS2, we made Zenodo for you to directly download dataset that we actually experimented with.
-
-
-Download link: 
-
-
 # Noise detection
 
 Basically, you modify baseline.yaml (or infer2others.yaml) and run python code.
