@@ -86,7 +86,7 @@ results can be found in ./dataset_prepared/.../result/
 ## other site
 Modify machine_type, bg_from, bg_to, rseed, model_type of infer2others.yaml and run noise_detection_infer2others.py
 
-results can be found in ./infer2others/.../result
+results can be found in ./infer2others/.../result/
 
 ### draw
 Modify machine_type, bg, rseed, model_type of baseline.yaml and run draw.py
