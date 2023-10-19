@@ -46,7 +46,7 @@ mtype = param['machine_type']
 bg = param['bg']
 rseed = param['rseed']
 
-model_type = param['model_type']
+input_feature = param['input_feature']
 
 set_randomseed = True
 if set_randomseed:
