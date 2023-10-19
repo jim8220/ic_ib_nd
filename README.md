@@ -58,22 +58,22 @@ background noise that will be tested in
 
 other parameters
 
-batch_size : (16) 
+batch_size : (recommended) 16 
 
 batch size
 
 
-short_cut : (True) 
+short_cut : (recommended) True
 
 you can pass data loading process if you make this True and data is already made as 'dataset_prepared'
 
 
-epochs : (20) 
+epochs : (recommended) 20 
 
 epochs
 
 
-exclude : ([aL, aM, aH, bL, bM, bH, cL, cM, cH, dL, dM, dH]) 
+exclude : (recommended) [aL, aM, aH, bL, bM, bH, cL, cM, cH, dL, dM, dH] 
 
 machine condition that will be excluded during train and validation
 
