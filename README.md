@@ -93,16 +93,3 @@ Modify machine_type, bg, rseed, model_type of baseline.yaml and run draw.py
 
 If you have any questions, please email to lasscap@kaist.ac.kr
 
-
-@inproceedings{harada2021toyadmos2,
-    author = "Harada, Noboru and Niizumi, Daisuke and Takeuchi, Daiki and Ohishi, Yasunori and Yasuda, Masahiro and Saito, Shoichiro",
-    title = "{ToyADMOS2}: Another Dataset of Miniature-Machine Operating Sounds for Anomalous Sound Detection under Domain Shift Conditions",
-    booktitle = "Proceedings of the 6th Detection and Classification of Acoustic Scenes and Events 2021 Workshop (DCASE2021)",
-    address = "Barcelona, Spain",
-    month = "November",
-    year = "2021",
-    pages = "1--5",
-    isbn = "978-84-09-36072-7",
-    doi. = "10.5281/zenodo.5770113",
-    _pdf = {https://dcase.community/documents/workshop2021/proceedings/DCASE2021Workshop_Harada_6.pdf}
-}
