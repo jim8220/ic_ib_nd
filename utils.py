@@ -16,7 +16,7 @@ from librosa.core.audio import __audioread_load
 from matplotlib import pyplot as plt
 
 
-def sig2STFT_4ch(signal, device):
+def sigs2ips(signal, device):
 
     sample_rate = 16000
 
@@ -50,7 +50,7 @@ def sig2STFT_4ch(signal, device):
     return stft.to(device)
 
 
-def drawSTFT_4ch(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
+def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
 
     # draw single signal pairs in to image file (deafult .jpg file)
     # modify code after feed back from prof.
@@ -74,7 +74,7 @@ def drawSTFT_4ch(signal1name, signal2name, machine_type, bg, title, savefig=True
 
     y_machines = torch.tensor(y_machines)
 
-    IID_drawed = sig2STFT_4ch(y_machines, 'cpu')
+    IID_drawed = sigs2ips(y_machines, 'cpu')
 
     plt.figure(figsize=(10,10))
     plt.rcParams.update({'font.size': 15})
@@ -140,7 +140,7 @@ def drawSTFT_4ch(signal1name, signal2name, machine_type, bg, title, savefig=True
     return 0
 
 
-def drawsinIPDIIDSTFT_longwin(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
+def drawsinIPDIID(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
 
     # draw single signal pairs in to image file (deafult .jpg file)
     # modify code after feed back from prof.
@@ -164,7 +164,7 @@ def drawsinIPDIIDSTFT_longwin(signal1name, signal2name, machine_type, bg, title,
 
     y_machines = torch.tensor(y_machines)
 
-    IID_drawed = sigs2sinIPDIID_2D_longwin(y_machines, 'cpu')
+    IID_drawed = sigs2sinIPDIID(y_machines, 'cpu')
 
     #plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1])
     plt.rcParams.update({'font.size': 15})
@@ -202,9 +202,9 @@ def drawsinIPDIIDSTFT_longwin(signal1name, signal2name, machine_type, bg, title,
     return 0
 
 
-class ResNet_CLF_4ch(nn.Module):
+class ResNet_ips(nn.Module):
     def __init__(self, n_class, device):
-        super(ResNet_CLF_4ch, self).__init__()
+        super(ResNet_ips, self).__init__()
         self.n_channel = 8
         self.n_class = n_class
         self.conv1 = nn.Conv2d(4, self.n_channel, kernel_size=7, stride=2, padding=(3, 2))
@@ -224,7 +224,7 @@ class ResNet_CLF_4ch(nn.Module):
         #self.softmax = nn.Softmax(dim=1)
         self.device = device
     def forward(self, x):
-        x = sig2STFT_4ch(x, self.device)
+        x = sigs2ips(x, self.device)
         x = self.conv1(torch.permute(x,(0,-1,1,2)))
         x = self.bn1(x)
         x = self.relu(x)
@@ -277,9 +277,9 @@ class ResidualBlock(nn.Module):
         return out
 
 
-class ResNet_sinIPD_long(nn.Module):
+class ResNet_sinIPD(nn.Module):
     def __init__(self, n_class, device):
-        super(ResNet_sinIPD_long, self).__init__()
+        super(ResNet_sinIPD, self).__init__()
         self.n_channel = 8
         self.n_class = n_class
         self.conv1 = nn.Conv2d(1, self.n_channel, kernel_size=7, stride=1, padding=(3, 2))
@@ -299,7 +299,7 @@ class ResNet_sinIPD_long(nn.Module):
         #self.softmax = nn.Softmax(dim=1)
         self.device = device
     def forward(self, x):
-        x = sigs2sinIPD_2D_longwin(x, self.device)
+        x = sigs2sinIPD(x, self.device)
         x = self.conv1(x.unsqueeze(1))
         x = self.bn1(x)
         x = self.relu(x)
@@ -318,9 +318,9 @@ class ResNet_sinIPD_long(nn.Module):
         #x = self.softmax(x)
         return x
 
-class ResNet_sinIPDIID_long(nn.Module):
+class ResNet_sinIPDIID(nn.Module):
     def __init__(self, n_class, device):
-        super(ResNet_sinIPDIID_long, self).__init__()
+        super(ResNet_sinIPDIID, self).__init__()
         self.n_channel = 8
         self.n_class = n_class
         self.conv1 = nn.Conv2d(2, self.n_channel, kernel_size=7, stride=1, padding=(3, 2))
@@ -340,7 +340,7 @@ class ResNet_sinIPDIID_long(nn.Module):
         #self.softmax = nn.Softmax(dim=1)
         self.device = device
     def forward(self, x):
-        x = sigs2sinIPDIID_2D_longwin(x, self.device)
+        x = sigs2sinIPDIID(x, self.device)
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
@@ -359,9 +359,9 @@ class ResNet_sinIPDIID_long(nn.Module):
         #x = self.softmax(x)
         return x
 
-class ResNet_IPD_long(nn.Module):
+class ResNet_IPD(nn.Module):
     def __init__(self, n_class, device):
-        super(ResNet_IPD_long, self).__init__()
+        super(ResNet_IPD, self).__init__()
         self.n_channel = 8
         self.n_class = n_class
         self.conv1 = nn.Conv2d(1, self.n_channel, kernel_size=7, stride=1, padding=(3, 2))
@@ -381,7 +381,7 @@ class ResNet_IPD_long(nn.Module):
         #self.softmax = nn.Softmax(dim=1)
         self.device = device
     def forward(self, x):
-        x = sigs2IPD_2D_longwin(x, self.device)
+        x = sigs2IPD(x, self.device)
         x = self.conv1(x.unsqueeze(1))
         x = self.bn1(x)
         x = self.relu(x)
@@ -401,9 +401,9 @@ class ResNet_IPD_long(nn.Module):
         return x
 
 
-class ResNet_IID_long(nn.Module):
+class ResNet_IID(nn.Module):
     def __init__(self, n_class, device):
-        super(ResNet_IID_long, self).__init__()
+        super(ResNet_IID, self).__init__()
         self.n_channel = 8
         self.n_class = n_class
         self.conv1 = nn.Conv2d(1, self.n_channel, kernel_size=7, stride=1, padding=(3, 2))
@@ -423,7 +423,7 @@ class ResNet_IID_long(nn.Module):
         #self.softmax = nn.Softmax(dim=1)
         self.device = device
     def forward(self, x):
-        x = sigs2IID_2D_longwin(x, self.device)
+        x = sigs2IID(x, self.device)
         x = self.conv1(x.unsqueeze(1))
         x = self.bn1(x)
         x = self.relu(x)
@@ -478,7 +478,7 @@ class ResidualBlock(nn.Module):
         return out
 
 
-def sigs2IID_2D_longwin(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
+def sigs2IID(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
 
     sample_rate = 16000
 
@@ -525,7 +525,7 @@ def sigs2IID_2D_longwin(signal, device): # can consume cpu memory due to numpy u
 
     return IID.to(device)
 
-def sigs2sinIPD_2D_longwin(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
+def sigs2sinIPD(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
 
     sample_rate = 16000
 
@@ -569,7 +569,7 @@ def sigs2sinIPD_2D_longwin(signal, device): # can consume cpu memory due to nump
     return IID.to(device)
 
 
-def sigs2IPD_2D_longwin(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
+def sigs2IPD(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
 
     sample_rate = 16000
 
@@ -612,7 +612,7 @@ def sigs2IPD_2D_longwin(signal, device): # can consume cpu memory due to numpy u
 
     return IID.to(device)
 
-def sigs2sinIPDIID_2D_longwin(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
+def sigs2sinIPDIID(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
 
     sample_rate = 16000
 

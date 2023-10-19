@@ -212,23 +212,23 @@ test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 if input_feature == 'intensity_and_phase_spectrum':
 
-    detector = utils.ResNet_CLF_4ch(2, device).to(device)
+    detector = utils.ResNet_ips(2, device).to(device)
 
 elif input_feature == 'sinIPD':
 
-    detector = utils.ResNet_sinIPD_long(2, device).to(device)
+    detector = utils.ResNet_sinIPD(2, device).to(device)
 
 elif input_feature == 'IID+sinIPD':
 
-    detector = utils.ResNet_sinIPDIID_long(2, device).to(device)
+    detector = utils.ResNet_sinIPDIID(2, device).to(device)
 
 elif input_feature == 'IPD':
 
-    detector = utils.ResNet_IPD_long(2, device).to(device)
+    detector = utils.ResNet_IPD(2, device).to(device)
 
 elif input_feature == 'IID':
 
-    detector = utils.ResNet_IID_long(2, device).to(device)
+    detector = utils.ResNet_IID(2, device).to(device)
 
 # loss function
 
