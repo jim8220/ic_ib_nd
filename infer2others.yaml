@@ -6,7 +6,7 @@ rseed : 20
 batch_size : 16
 short_cut : True
 
-epochs: 20 #52 (in DPRTF github)
+epochs: 20
 
 exclude: [aL, aM, aH, bL, bM, bH, cL, cM, cH, dL, dM, dH]
 
