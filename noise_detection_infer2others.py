@@ -42,7 +42,7 @@ bg_to = param['bg_to']
 
 rseed = param['rseed']
 
-model_type = param['model_type']
+input_feature = param['input_feature']
 
 set_randomseed = True
 if set_randomseed:
@@ -66,10 +66,10 @@ if os.path.isfile(f'./dataset_prepared/{mtype}/N{bg_to}/{rseed}/train_dataset.pk
         fdata.close()
 
 
-if os.path.isfile(f'./dataset_prepared/{mtype}/N{bg_from}/{rseed}/result/{model_type}/best_model'):
+if os.path.isfile(f'./dataset_prepared/{mtype}/N{bg_from}/{rseed}/result/{input_feature}/best_model'):
     print("load trained model")
 
-    test_model = torch.load(f'./dataset_prepared/{mtype}/N{bg_from}/{rseed}/result/{model_type}/best_model')
+    test_model = torch.load(f'./dataset_prepared/{mtype}/N{bg_from}/{rseed}/result/{input_feature}/best_model')
 
 test_model.eval()
 
@@ -122,12 +122,12 @@ print(f'test f1: {test_f1}')
 
 # saving results
 
-os.makedirs(f'./infer2others/{mtype}/from_N{bg_from}_to_N_{bg_to}/{rseed}/result/{model_type}', exist_ok=True)
+os.makedirs(f'./infer2others/{mtype}/from_N{bg_from}_to_N_{bg_to}/{rseed}/result/{input_feature}', exist_ok=True)
 
-with open(f'./infer2others/{mtype}/from_N{bg_from}_to_N_{bg_to}/{rseed}/result/{model_type}/test_f1s.txt','w') as f_test:
+with open(f'./infer2others/{mtype}/from_N{bg_from}_to_N_{bg_to}/{rseed}/result/{input_feature}/test_f1s.txt','w') as f_test:
     f_test.write(str(test_f1))
     f_test.close()
 
-with open(f'./infer2others/{mtype}/from_N{bg_from}_to_N_{bg_to}/{rseed}/result/{model_type}/params.txt','w') as f_param:
+with open(f'./infer2others/{mtype}/from_N{bg_from}_to_N_{bg_to}/{rseed}/result/{input_feature}/params.txt','w') as f_param:
     print(param, file=f_param)
     f_param.close()

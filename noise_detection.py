@@ -43,7 +43,7 @@ mtype = param['machine_type']
 bg = param['bg']
 rseed = param['rseed']
 
-model_type = param['model_type']
+input_feature = param['input_feature']
 
 set_randomseed = True
 if set_randomseed:
@@ -141,7 +141,7 @@ else:
         test_dataset.append([a_data, a_label, test_audio_name[iaudio]])
 
 
-    os.makedirs(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{model_type}', exist_ok=True)
+    os.makedirs(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{input_feature}', exist_ok=True)
     with open(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/train_dataset.pkl', 'wb') as f1:
         pickle.dump(train_dataset, f1)
         f1.close()
@@ -210,23 +210,23 @@ test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # model
 
-if model_type == 'intensity_and_phase_spectrum':
+if input_feature == 'intensity_and_phase_spectrum':
 
     detector = utils.ResNet_CLF_4ch(2, device).to(device)
 
-elif model_type == 'sinIPD':
+elif input_feature == 'sinIPD':
 
     detector = utils.ResNet_sinIPD_long(2, device).to(device)
 
-elif model_type == 'IID+sinIPD':
+elif input_feature == 'IID+sinIPD':
 
     detector = utils.ResNet_sinIPDIID_long(2, device).to(device)
 
-elif model_type == 'IPD':
+elif input_feature == 'IPD':
 
     detector = utils.ResNet_IPD_long(2, device).to(device)
 
-elif model_type == 'IID':
+elif input_feature == 'IID':
 
     detector = utils.ResNet_IID_long(2, device).to(device)
 
@@ -322,18 +322,18 @@ print(f'test f1: {test_f1}')
 
 # saving results
 
-os.makedirs(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{model_type}', exist_ok=True)
+os.makedirs(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{input_feature}', exist_ok=True)
 
-with open(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{model_type}/valid_f1s.txt','w') as f_val:
+with open(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{input_feature}/valid_f1s.txt','w') as f_val:
     f_val.write(str(val_f1s))
     f_val.close()
 
-with open(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{model_type}/test_f1s.txt','w') as f_test:
+with open(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{input_feature}/test_f1s.txt','w') as f_test:
     f_test.write(str(test_f1))
     f_test.close()
 
-with open(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{model_type}/params.txt','w') as f_param:
+with open(f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{input_feature}/params.txt','w') as f_param:
     print(param, file=f_param)
     f_param.close()
 
-torch.save(best_model, f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{model_type}/best_model')
+torch.save(best_model, f'./dataset_prepared/{mtype}/N{bg}/{rseed}/result/{input_feature}/best_model')
