@@ -35,19 +35,19 @@ def sigs2ips(signal, device):
     nb = signal.shape[0]
     nt = int((nsample) / win_shift) + 1 # for iSTFT
     # nt = np.floor((nsample - win_len) / win_shift + 1).astype(int)
-    stft = torch.zeros((nb, nf, nt, nch*2), dtype=torch.complex64)
+    ans = torch.zeros((nb, nf, nt, nch*2), dtype=torch.complex64)
 
     window = torch.hann_window(window_length=win_len, device=signal.device)
     for ch_idx in range(0, nch, 1):
         stft_temp = torch.stft(signal[:, ch_idx, :], n_fft = nfft, hop_length = win_shift, win_length = win_len,
                                window = window, center = True, normalized = False, return_complex = True)  # for iSTFT
 
-        stft[:, :, :, ch_idx] = 20*torch.log10(torch.abs(stft_temp[:, 0:nf, 0:nt]))
-        stft[:, :, :, ch_idx+2] = torch.angle(stft_temp[:, 0:nf, 0:nt])
+        ans[:, :, :, ch_idx] = 20*torch.log10(torch.abs(stft_temp[:, 0:nf, 0:nt]))
+        ans[:, :, :, ch_idx+2] = torch.angle(stft_temp[:, 0:nf, 0:nt])
 
 
-    stft = torch.real(stft)
-    return stft.to(device)
+    ans = torch.real(ans)
+    return ans.to(device)
 
 
 def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
@@ -242,40 +242,6 @@ class ResNet_ips(nn.Module):
         x = self.fc(x)
         #x = self.softmax(x)
         return x
-
-class ResidualBlock(nn.Module):
-    def __init__(self, in_channel, out_channel, projection=False):
-        super(ResidualBlock, self).__init__()
-        self.in_channel = in_channel
-        self.out_channel = out_channel
-        self.projection = projection
-        if self.projection:
-            self.conv1 = nn.Conv2d(self.in_channel, self.out_channel, kernel_size=3, stride=2, padding=(1, 1))
-        else:
-            self.conv1 = nn.Conv2d(self.in_channel, self.out_channel, kernel_size=3, padding=(1, 1))
-        self.bn1 = nn.BatchNorm2d(self.out_channel)
-        self.relu = nn.ReLU()
-        self.conv2 = nn.Conv2d(self.out_channel, self.out_channel, kernel_size=3, padding='same')
-        self.bn2 = nn.BatchNorm2d(self.out_channel)
-        if self.projection:
-            self.downsample = nn.Conv2d(self.in_channel, self.out_channel, stride=2, kernel_size=1)
-        else:
-            self.downsample = nn.Conv2d(self.in_channel, self.out_channel, kernel_size=1)
-
-    def forward(self, x):
-        out = self.conv1(x)
-        out = self.bn1(out)
-        out = self.relu(out)
-        out = self.conv2(out)
-        out = self.bn2(out)
-        if self.projection:
-            skip = self.downsample(x)
-        else:
-            skip = x
-        out += skip
-        out = self.relu(out)
-        return out
-
 
 class ResNet_sinIPD(nn.Module):
     def __init__(self, n_class, device):
@@ -487,14 +453,6 @@ def sigs2IID(signal, device): # can consume cpu memory due to numpy usage, shoul
     win_shift_ratio = 0.5 #0.1 #0.5
     nfft = win_len
     fre_used_ratio = 2000 / (sample_rate / 2)
-    #fre_used_ratio = 4000 / (sample_rate / 2) # what is this...?
-    # concentrate freq from 0~4000hz.
-    # paper...
-
-
-
-    # nbatch, nsample, nch
-    # stft = DoSTFT(signal, win_len, win_shift_ratio, nfft, fre_used_ratio)
 
     nsample = signal.shape[2]
     nch = signal.shape[1]
@@ -504,7 +462,7 @@ def sigs2IID(signal, device): # can consume cpu memory due to numpy usage, shoul
 
     nb = signal.shape[0]
     nt = int((nsample) / win_shift) + 1 # for iSTFT
-    # nt = np.floor((nsample - win_len) / win_shift + 1).astype(int)
+
     stft = torch.zeros((nb, nf, nt, nch), dtype=torch.complex64)
 
     window = torch.hann_window(window_length=win_len, device=signal.device)
@@ -514,14 +472,13 @@ def sigs2IID(signal, device): # can consume cpu memory due to numpy usage, shoul
 
         stft[:, :, :, ch_idx] = stft_temp[:, 0:nf, 0:nt] #+ torch.finfo(torch.float32).eps)
 
-    #stft = torch.real(stft)
+
 
     IID = torch.zeros((nb,nf,nt), dtype=torch.float32)
     for d_idx in range(nb):
         IID[d_idx,:,:] = 20*torch.log10(torch.abs(stft[d_idx,:,:,0])) - 20*torch.log10(torch.abs(stft[d_idx,:,:,1]))
         IID[d_idx,:,:] /= (torch.max(torch.abs(IID[d_idx,:,:]))+torch.finfo(torch.float32).eps)
 
-    #IID = IID / torch.abs(IID).max() # not utilizing is better
 
     return IID.to(device)
 
@@ -534,13 +491,6 @@ def sigs2sinIPD(signal, device): # can consume cpu memory due to numpy usage, sh
     win_shift_ratio = 0.5 #0.1 #0.5
     nfft = win_len
     fre_used_ratio = 2000 / (sample_rate / 2)
-    #fre_used_ratio = 4000 / (sample_rate / 2) # what is this...?
-    # concentrate freq from 0~4000hz.
-    # paper...
-
-
-    # nbatch, nsample, nch
-    # stft = DoSTFT(signal, win_len, win_shift_ratio, nfft, fre_used_ratio)
 
     nsample = signal.shape[2]
     nch = signal.shape[1]
@@ -550,7 +500,7 @@ def sigs2sinIPD(signal, device): # can consume cpu memory due to numpy usage, sh
 
     nb = signal.shape[0]
     nt = int((nsample) / win_shift) + 1 # for iSTFT
-    # nt = np.floor((nsample - win_len) / win_shift + 1).astype(int)
+
     stft = torch.zeros((nb, nf, nt, nch), dtype=torch.complex64)
 
     window = torch.hann_window(window_length=win_len, device=signal.device)
@@ -560,13 +510,10 @@ def sigs2sinIPD(signal, device): # can consume cpu memory due to numpy usage, sh
 
         stft[:, :, :, ch_idx] = stft_temp[:, 0:nf, 0:nt] #+ torch.finfo(torch.float32).eps)
 
-    #stft = torch.real(stft)
+    IPD = torch.sin(torch.angle(stft[:,:,:,0]/(stft[:,:,:,1]+ torch.finfo(torch.float32).eps)))
 
-    IID = torch.sin(torch.angle(stft[:,:,:,0]/(stft[:,:,:,1]+ torch.finfo(torch.float32).eps)))
 
-    #IID = IID / torch.abs(IID).max() # not utilizing is better
-
-    return IID.to(device)
+    return IPD.to(device)
 
 
 def sigs2IPD(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
@@ -578,13 +525,6 @@ def sigs2IPD(signal, device): # can consume cpu memory due to numpy usage, shoul
     win_shift_ratio = 0.5 #0.1 #0.5
     nfft = win_len
     fre_used_ratio = 2000 / (sample_rate / 2)
-    #fre_used_ratio = 4000 / (sample_rate / 2) # what is this...?
-    # concentrate freq from 0~4000hz.
-    # paper...
-
-
-    # nbatch, nsample, nch
-    # stft = DoSTFT(signal, win_len, win_shift_ratio, nfft, fre_used_ratio)
 
     nsample = signal.shape[2]
     nch = signal.shape[1]
@@ -594,7 +534,7 @@ def sigs2IPD(signal, device): # can consume cpu memory due to numpy usage, shoul
 
     nb = signal.shape[0]
     nt = int((nsample) / win_shift) + 1 # for iSTFT
-    # nt = np.floor((nsample - win_len) / win_shift + 1).astype(int)
+
     stft = torch.zeros((nb, nf, nt, nch), dtype=torch.complex64)
 
     window = torch.hann_window(window_length=win_len, device=signal.device)
@@ -604,13 +544,13 @@ def sigs2IPD(signal, device): # can consume cpu memory due to numpy usage, shoul
 
         stft[:, :, :, ch_idx] = stft_temp[:, 0:nf, 0:nt] #+ torch.finfo(torch.float32).eps)
 
-    #stft = torch.real(stft)
 
-    IID = torch.angle(stft[:,:,:,0]/(stft[:,:,:,1]+ torch.finfo(torch.float32).eps))
 
-    #IID = IID / torch.abs(IID).max() # not utilizing is better
+    sinIPD = torch.angle(stft[:,:,:,0]/(stft[:,:,:,1]+ torch.finfo(torch.float32).eps))
 
-    return IID.to(device)
+
+
+    return sinIPD.to(device)
 
 def sigs2sinIPDIID(signal, device): # can consume cpu memory due to numpy usage, should be changed in long term
 
@@ -621,13 +561,6 @@ def sigs2sinIPDIID(signal, device): # can consume cpu memory due to numpy usage,
     win_shift_ratio = 0.5 #0.1 #0.5
     nfft = win_len
     fre_used_ratio = 2000 / (sample_rate / 2)
-    #fre_used_ratio = 4000 / (sample_rate / 2) # what is this...?
-    # concentrate freq from 0~4000hz.
-    # paper...
-
-
-    # nbatch, nsample, nch
-    # stft = DoSTFT(signal, win_len, win_shift_ratio, nfft, fre_used_ratio)
 
     nsample = signal.shape[2]
     nch = signal.shape[1]
@@ -637,7 +570,7 @@ def sigs2sinIPDIID(signal, device): # can consume cpu memory due to numpy usage,
 
     nb = signal.shape[0]
     nt = int((nsample) / win_shift) + 1 # for iSTFT
-    # nt = np.floor((nsample - win_len) / win_shift + 1).astype(int)
+
     stft = torch.zeros((nb, nf, nt, nch), dtype=torch.complex64)
 
     window = torch.hann_window(window_length=win_len, device=signal.device)
@@ -647,17 +580,15 @@ def sigs2sinIPDIID(signal, device): # can consume cpu memory due to numpy usage,
 
         stft[:, :, :, ch_idx] = stft_temp[:, 0:nf, 0:nt] #+ torch.finfo(torch.float32).eps)
 
-    #stft = torch.real(stft)
 
-    IPD = torch.sin(torch.angle(stft[:,:,:,0]/(stft[:,:,:,1]+ torch.finfo(torch.float32).eps)))
+
+    sinIPD = torch.sin(torch.angle(stft[:,:,:,0]/(stft[:,:,:,1]+ torch.finfo(torch.float32).eps)))
     IID = torch.zeros((nb,nf,nt), dtype=torch.float32)
     for d_idx in range(nb):
         IID[d_idx,:,:] = 20*torch.log10(torch.abs(stft[d_idx,:,:,0])) - 20*torch.log10(torch.abs(stft[d_idx,:,:,1]))
         IID[d_idx,:,:] /= (torch.max(torch.abs(IID[d_idx,:,:]))+torch.finfo(torch.float32).eps)
 
-    ans = torch.cat([IPD.unsqueeze(1), IID.unsqueeze(1)],1)
-
-    #IID = IID / torch.abs(IID).max() # not utilizing is better
+    ans = torch.cat([sinIPD.unsqueeze(1), IID.unsqueeze(1)],1)
 
     return ans.to(device)
 
