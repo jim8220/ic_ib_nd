@@ -92,7 +92,10 @@ Modify machine_type, bg_from, bg_to, rseed, input_feature of infer2others.yaml a
 results can be found in ./infer2others/.../result/
 
 ### draw
-Modify machine_type, bg, rseed, input_feature of baseline.yaml and run draw.py
+Modify machine_type, bg, rseed baseline.yaml and run draw.py
+
+
+You can draw IID+sinIPD / intensity and phase spectrum
 
 If you have any questions, please email to lasscap@kaist.ac.kr
 
