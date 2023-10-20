@@ -72,10 +72,7 @@ else:
     print("error")
 
 
-
-# def drawIID(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
-
 for ifile in tqdm(range(len(test_dataset)), desc = "drawing test dataset"):
-    #utils.drawsinIPDIID(test_dataset[ifile][2][0].split('/')[-1][:-4], test_dataset[ifile][2][1].split('/')[-1][:-4], param['machine_type'], param['bg'], test_dataset[ifile][2][0].split('/')[-1][:-4]+'_'+test_dataset[ifile][2][1].split('/')[-1][:-4])
+    #utils.draw_sinIPDIID(test_dataset[ifile][2][0].split('/')[-1][:-4], test_dataset[ifile][2][1].split('/')[-1][:-4], param['machine_type'], param['bg'], test_dataset[ifile][2][0].split('/')[-1][:-4]+'_'+test_dataset[ifile][2][1].split('/')[-1][:-4])
 
     utils.draw_ips(test_dataset[ifile][2][0].split('/')[-1][:-4], test_dataset[ifile][2][1].split('/')[-1][:-4], param['machine_type'], param['bg'], test_dataset[ifile][2][0].split('/')[-1][:-4]+'_'+test_dataset[ifile][2][1].split('/')[-1][:-4])

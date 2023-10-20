@@ -76,11 +76,11 @@ def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fi
 
     IID_drawed = sigs2ips(y_machines, 'cpu')
 
-    plt.figure(figsize=(10,10))
-    plt.rcParams.update({'font.size': 15})
+    plt.figure(figsize=(20,10))
+    plt.rcParams.update({'font.size': 25})
     plt.subplot(2,2,1)
 
-    plt.title(f'Intensity_{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1])
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (intensity)')
     plt.imshow(IID_drawed[0,:,:,0], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -96,7 +96,7 @@ def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fi
     plt.gca().invert_yaxis()
 
     plt.subplot(2,2,2)
-    plt.title(f'Intensity_{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1])
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (intensity)')
     plt.imshow(IID_drawed[0,:,:,1], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -108,7 +108,7 @@ def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fi
     plt.tight_layout()
 
     plt.subplot(2,2,3)
-    plt.title(f'Phase_{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1])
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (phase)')
     plt.imshow(IID_drawed[0,:,:,2], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -121,7 +121,7 @@ def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fi
 
 
     plt.subplot(2,2,4)
-    plt.title(f'Phase_{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1])
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (phase)')
     plt.imshow(IID_drawed[0,:,:,3], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -140,7 +140,7 @@ def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fi
     return 0
 
 
-def drawsinIPDIID(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
+def draw_sinIPDIID(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
 
     # draw single signal pairs in to image file (deafult .jpg file)
     # modify code after feed back from prof.

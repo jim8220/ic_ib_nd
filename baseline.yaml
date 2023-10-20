@@ -1,5 +1,5 @@
 machine_type: toytrain
-bg : 2
+bg : 1
 rseed : 20
 
 batch_size : 16
