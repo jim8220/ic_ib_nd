@@ -210,9 +210,9 @@ test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # model
 
-if input_feature == 'intensity_and_phase_spectrum':
+if input_feature == 'STFT':
 
-    detector = utils.ResNet_ips(2, device).to(device)
+    detector = utils.ResNet_STFT(2, device).to(device)
 
 elif input_feature == 'sinIPD':
 

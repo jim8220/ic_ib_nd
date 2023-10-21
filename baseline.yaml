@@ -1,5 +1,5 @@
 machine_type: toytrain
-bg : 1
+bg : 4
 rseed : 20
 
 batch_size : 16
@@ -9,5 +9,5 @@ epochs: 20
 
 exclude: [aL, aM, aH, bL, bM, bH, cL, cM, cH, dL, dM, dH]
 
-input_feature: IID+sinIPD
+input_feature: STFT
 

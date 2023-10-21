@@ -16,7 +16,7 @@ from librosa.core.audio import __audioread_load
 from matplotlib import pyplot as plt
 
 
-def sigs2ips(signal, device):
+def sigs2STFT(signal, device):
 
     sample_rate = 16000
 
@@ -42,15 +42,15 @@ def sigs2ips(signal, device):
         stft_temp = torch.stft(signal[:, ch_idx, :], n_fft = nfft, hop_length = win_shift, win_length = win_len,
                                window = window, center = True, normalized = False, return_complex = True)  # for iSTFT
 
-        ans[:, :, :, ch_idx] = 20*torch.log10(torch.abs(stft_temp[:, 0:nf, 0:nt]))
-        ans[:, :, :, ch_idx+2] = torch.angle(stft_temp[:, 0:nf, 0:nt])
+        ans[:, :, :, ch_idx] = torch.real(stft_temp[:, 0:nf, 0:nt])
+        ans[:, :, :, ch_idx+2] = torch.imag(stft_temp[:, 0:nf, 0:nt])
 
 
     ans = torch.real(ans)
     return ans.to(device)
 
 
-def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
+def draw_STFT(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
 
     # draw single signal pairs in to image file (deafult .jpg file)
     # modify code after feed back from prof.
@@ -74,13 +74,13 @@ def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fi
 
     y_machines = torch.tensor(y_machines)
 
-    IID_drawed = sigs2ips(y_machines, 'cpu')
+    IID_drawed = sigs2STFT(y_machines, 'cpu')
 
     plt.figure(figsize=(20,10))
     plt.rcParams.update({'font.size': 25})
     plt.subplot(2,2,1)
 
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (intensity)')
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (real)')
     plt.imshow(IID_drawed[0,:,:,0], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -92,43 +92,43 @@ def draw_ips(signal1name, signal2name, machine_type, bg, title, savefig=True, fi
     plt.yticks(np.arange(0,freq, step=freq-1),labels=['0','2000'])
     plt.xticks(np.arange(0,tm, step=tm-1),labels=['0','12'])
     plt.colorbar()
-    plt.clim(-100,0)
+    plt.clim(-3,3)
     plt.gca().invert_yaxis()
 
     plt.subplot(2,2,2)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (intensity)')
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (real)')
     plt.imshow(IID_drawed[0,:,:,1], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
     plt.yticks(np.arange(0,freq, step=freq-1),labels=['0','2000'])
     plt.xticks(np.arange(0,tm, step=tm-1),labels=['0','12'])
     plt.colorbar()
-    plt.clim(-100, 0)
+    plt.clim(-3,3)
     plt.gca().invert_yaxis()
     plt.tight_layout()
 
     plt.subplot(2,2,3)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (phase)')
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (imaginary)')
     plt.imshow(IID_drawed[0,:,:,2], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
     plt.yticks(np.arange(0,freq, step=freq-1),labels=['0','2000'])
     plt.xticks(np.arange(0,tm, step=tm-1),labels=['0','12'])
     plt.colorbar()
-    plt.clim(-4, 4)
+    plt.clim(-3,3)
     plt.gca().invert_yaxis()
     plt.tight_layout()
 
 
     plt.subplot(2,2,4)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (phase)')
+    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (imaginary)')
     plt.imshow(IID_drawed[0,:,:,3], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
     plt.yticks(np.arange(0,freq, step=freq-1),labels=['0','2000'])
     plt.xticks(np.arange(0,tm, step=tm-1),labels=['0','12'])
     plt.colorbar()
-    plt.clim(-4, 4)
+    plt.clim(-3,3)
     plt.gca().invert_yaxis()
     plt.tight_layout()
 
@@ -202,9 +202,9 @@ def draw_sinIPDIID(signal1name, signal2name, machine_type, bg, title, savefig=Tr
     return 0
 
 
-class ResNet_ips(nn.Module):
+class ResNet_STFT(nn.Module):
     def __init__(self, n_class, device):
-        super(ResNet_ips, self).__init__()
+        super(ResNet_STFT, self).__init__()
         self.n_channel = 8
         self.n_class = n_class
         self.conv1 = nn.Conv2d(4, self.n_channel, kernel_size=7, stride=2, padding=(3, 2))
@@ -224,7 +224,7 @@ class ResNet_ips(nn.Module):
         #self.softmax = nn.Softmax(dim=1)
         self.device = device
     def forward(self, x):
-        x = sigs2ips(x, self.device)
+        x = sigs2STFT(x, self.device)
         x = self.conv1(torch.permute(x,(0,-1,1,2)))
         x = self.bn1(x)
         x = self.relu(x)
