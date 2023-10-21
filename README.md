@@ -37,7 +37,7 @@ rseed: (recommended) 0 / 10 / 20
 
 random seed that you want to experiment with
 
-input_feature: intensity_and_phase_spectrum / IID / IPD / sinIPD / IID+sinIPD
+input_feature: STFT / IID / IPD / sinIPD / IID+sinIPD
 
 
 input feature that you want to experiment with
