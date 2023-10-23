@@ -50,7 +50,7 @@ def sigs2STFT(signal, device):
     return ans.to(device)
 
 
-def draw_STFT(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
+def draw_complex_spectrum(signal1name, signal2name, machine_type, bg, title, savefig=True, fileformat = '.jpg', abs_path = './processed_data'):
 
     # draw single signal pairs in to image file (deafult .jpg file)
     # modify code after feed back from prof.
@@ -80,7 +80,7 @@ def draw_STFT(signal1name, signal2name, machine_type, bg, title, savefig=True, f
     plt.rcParams.update({'font.size': 25})
     plt.subplot(2,2,1)
 
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (real)')
+    plt.title(f'{machine_type}_N{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (real)')
     plt.imshow(IID_drawed[0,:,:,0], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -96,7 +96,7 @@ def draw_STFT(signal1name, signal2name, machine_type, bg, title, savefig=True, f
     plt.gca().invert_yaxis()
 
     plt.subplot(2,2,2)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (real)')
+    plt.title(f'{machine_type}_N{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (real)')
     plt.imshow(IID_drawed[0,:,:,1], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -108,7 +108,7 @@ def draw_STFT(signal1name, signal2name, machine_type, bg, title, savefig=True, f
     plt.tight_layout()
 
     plt.subplot(2,2,3)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (imaginary)')
+    plt.title(f'{machine_type}_N{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1]+' (imaginary)')
     plt.imshow(IID_drawed[0,:,:,2], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -121,7 +121,7 @@ def draw_STFT(signal1name, signal2name, machine_type, bg, title, savefig=True, f
 
 
     plt.subplot(2,2,4)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (imaginary)')
+    plt.title(f'{machine_type}_N{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal2name.split('/')[-1].split('_')[1]+' (imaginary)')
     plt.imshow(IID_drawed[0,:,:,3], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
@@ -132,9 +132,9 @@ def draw_STFT(signal1name, signal2name, machine_type, bg, title, savefig=True, f
     plt.gca().invert_yaxis()
     plt.tight_layout()
 
-    os.makedirs(f'./intensity_and_phase_spectrum/{machine_type}/N{bg}/', exist_ok=True)
+    os.makedirs(f'./complex_spectrum/{machine_type}/N{bg}/', exist_ok=True)
 
-    plt.savefig(f'./intensity_and_phase_spectrum/{machine_type}/N{bg}/' + title + fileformat) #rseed 0 only plz
+    plt.savefig(f'./complex_spectrum/{machine_type}/N{bg}/' + title + fileformat) #rseed 0 only plz
     plt.close()
     #print('draw complete!')
     return 0
@@ -169,7 +169,7 @@ def draw_sinIPDIID(signal1name, signal2name, machine_type, bg, title, savefig=Tr
     #plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])}'+'_'+signal1name.split('/')[-1].split('_')[1])
     plt.rcParams.update({'font.size': 15})
     plt.subplot(211)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])} (sinIPD)')
+    plt.title(f'{machine_type}_N{bg}_{anomaly_dataset.pair2status_info([signal1name])} (sinIPD)')
     plt.imshow(IID_drawed[0, 0, :,:], aspect='auto')
     freq = IID_drawed.shape[2]
     tm = IID_drawed.shape[3]
@@ -182,7 +182,7 @@ def draw_sinIPDIID(signal1name, signal2name, machine_type, bg, title, savefig=Tr
     plt.gca().invert_yaxis()
 
     plt.subplot(212)
-    plt.title(f'{machine_type}_{bg}_{anomaly_dataset.pair2status_info([signal1name])} (IID)')
+    plt.title(f'{machine_type}_N{bg}_{anomaly_dataset.pair2status_info([signal1name])} (IID)')
     plt.imshow(IID_drawed[0, 1, :,:], aspect='auto')
     plt.ylabel('frequency (Hz)')
     plt.xlabel('time (s)')
